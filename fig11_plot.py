@@ -2,6 +2,7 @@ import matplotlib
 matplotlib.use('Agg')
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rc('font', **{'size':11})
@@ -35,12 +36,13 @@ def plot_accs(name, xlim=None):
     plt.xlabel(r'$\mathrm{Epochs}$')
     plt.ylabel(r'$\mathrm{Accuracy}$')
     plt.legend(loc='lower right', handlelength=1)
-    plt.savefig(f'plot/grokking_{name}',dpi=300, bbox_inches='tight')
-    plt.savefig(f'plot/grokking_{name}.pdf',format='pdf', dpi=300, bbox_inches='tight')
+    plt.savefig(f'plot/11_{name}',dpi=300, bbox_inches='tight')
+    plt.savefig(f'plot/11_{name}.pdf',format='pdf', dpi=300, bbox_inches='tight')
     plt.close()
 
 if __name__ == '__main__':
-    names = ['a']
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--subfig", help="sub_fig", type=str, default="a")
+    args = parser.parse_args()
     xlim = 100
-    for name in names:
-        plot_accs(name, xlim=None)
+    plot_accs(args.subfig, xlim=None)

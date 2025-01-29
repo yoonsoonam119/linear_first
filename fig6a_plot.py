@@ -60,5 +60,5 @@ cbar_imba.set_label('Kernel Distance (Log Scale)', fontsize=20, labelpad=10)
 # Adjust layout to accommodate the wider spacing
 plt.subplots_adjust(hspace=5)  # Increase vertical spacing between rows
 plt.tight_layout(rect=[0, 0, 0.78, 1])  # Reduce the main plot area further to allow more space for color bars
-plt.savefig('plot/imba_figure.pdf', format='pdf', bbox_inches='tight' ,dpi=300)
+plt.savefig('plot/6a.pdf', format='pdf', bbox_inches='tight' ,dpi=300)
 plt.show()

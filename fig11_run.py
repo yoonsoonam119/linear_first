@@ -90,7 +90,7 @@ def test(model, loader):
         cnt += c
     return te_acc/cnt
 
-def run(args, name, weight_scale, target_scale, input_scale, dropout, output_scale):
+def run(args, weight_scale, target_scale, input_scale, dropout, output_scale):
     trs = []
     tes = []
     train_loader = get_loader(True, target_scale=target_scale, input_scale=input_scale)
@@ -103,22 +103,22 @@ def run(args, name, weight_scale, target_scale, input_scale, dropout, output_sca
         tes.append(test(model, test_loader))
         train(model, train_loader, optimizer, criterion)
         print('epoch: ', epoch, ' train: ',trs[-1], ' test: ', tes[-1])
-    np.save(f'./data/grokking_{name}', np.stack([np.array(trs), np.array(tes)]))
+    np.save(f'./data/grokking_{args.subfig}', np.stack([np.array(trs), np.array(tes)]))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-e", "--epochs", help="epochs", type=int, default=2000)
     parser.add_argument("-l", "--lr", help="learning rate", type=float, default=1e-3)
     parser.add_argument("-w", "--weight_decay", help="weight decay", type=float, default=1e-4)
-    parser.add_argument("-f", "--subfig", help="sub_fig", type=int, default=1)
+    parser.add_argument("-f", "--subfig", help="sub_fig", type=str, default='a')
     args = parser.parse_args()
 
-    subfig_arr =[
-        {'name': 'a', 'weight_scale': 5, 'target_scale' : 3, 'input_scale': 1, 'dropout':0, 'output_scale':1 },
-        {'name': 'b', 'weight_scale': 1, 'target_scale': 3, 'input_scale': 1, 'dropout': 0, 'output_scale': 1},
-        {'name': 'c', 'weight_scale': 5, 'target_scale': 30, 'input_scale': 1, 'dropout': 0, 'output_scale': 1},
-        {'name': 'd', 'weight_scale': 5, 'target_scale': 3, 'input_scale': 0.01, 'dropout': 0, 'output_scale': 1},
-        {'name': 'e', 'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'dropout': 0.6, 'output_scale': 1},
-        {'name': 'f', 'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'dropout': 0, 'output_scale': 0.1},
-    ]
-    run(args, **(subfig_arr[args.subfig]))
+    subfig_d ={
+        'a': {'weight_scale': 5, 'target_scale' : 3, 'input_scale': 1, 'dropout':0, 'output_scale':1 },
+        'b': {'weight_scale': 1, 'target_scale': 3, 'input_scale': 1, 'dropout': 0, 'output_scale': 1},
+        'c': {'weight_scale': 5, 'target_scale': 30, 'input_scale': 1, 'dropout': 0, 'output_scale': 1},
+        'd': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 0.01, 'dropout': 0, 'output_scale': 1},
+        'e': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'dropout': 0.6, 'output_scale': 1},
+        'f': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'dropout': 0, 'output_scale': 0.1},
+    }
+    run(args, **(subfig_d[args.subfig]))
