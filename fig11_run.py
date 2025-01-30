@@ -114,7 +114,6 @@ if __name__ == '__main__':
         'b': {'weight_scale': 1, 'target_scale': 3, 'input_scale': 1, 'output_scale': 1},
         'c': {'weight_scale': 5, 'target_scale': 30, 'input_scale': 1, 'output_scale': 1},
         'd': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 0.01, 'output_scale': 1},
-        'e': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'output_scale': 1},
-        'f': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'output_scale': 0.1},
+        'e': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'output_scale': 0.1},
     }
     run(args, **(subfig_d[args.subfig]))
