@@ -6,7 +6,7 @@ import numpy as np
 import argparse
 
 class MLP(nn.Module):
-    def __init__(self, width=512, output_scale=1, weight_scale=5, dropout=0):
+    def __init__(self, width=512, output_scale=1, weight_scale=5):
         super(MLP, self).__init__()
         self.nonlin = nn.Tanh()
         self.output_scale = output_scale
@@ -14,10 +14,6 @@ class MLP(nn.Module):
         self.l2 = nn.Linear(width,width)
         self.l3 = nn.Linear(width,width)
         self.l4 = nn.Linear(width,10)
-        if dropout > 0:
-            self.drop = nn.Dropout(dropout)
-        else:
-            self.drop = nn.Identity()
 
         for w, l in zip((784,width, width,width), [self.l1, self.l2, self.l3, self.l4]):
             nn.init.normal_(l.weight,std=weight_scale/np.sqrt(w))
@@ -26,7 +22,7 @@ class MLP(nn.Module):
         x = self.nonlin(self.l1(x))
         x = self.nonlin(self.l2(x))
         x = self.nonlin(self.l3(x))
-        x = self.output_scale * self.l4(self.drop(x))
+        x = self.output_scale * self.l4(x)
         return x
 
 def get_loader(train, data_cnt=1000, num_classes=10, batch_size=128, target_scale=1, input_scale=1):
@@ -90,12 +86,12 @@ def test(model, loader):
         cnt += c
     return te_acc/cnt
 
-def run(args, weight_scale, target_scale, input_scale, dropout, output_scale):
+def run(args, weight_scale, target_scale, input_scale, output_scale):
     trs = []
     tes = []
     train_loader = get_loader(True, target_scale=target_scale, input_scale=input_scale)
     test_loader = get_loader(False, data_cnt=10000, batch_size=10000, target_scale=target_scale, input_scale=input_scale)
-    model = MLP(output_scale=output_scale, weight_scale=weight_scale,dropout=dropout)
+    model = MLP(output_scale=output_scale, weight_scale=weight_scale)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     criterion = nn.MSELoss(reduction='mean')
     for epoch in range(args.epochs):
@@ -114,11 +110,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     subfig_d ={
-        'a': {'weight_scale': 5, 'target_scale' : 3, 'input_scale': 1, 'dropout':0, 'output_scale':1 },
-        'b': {'weight_scale': 1, 'target_scale': 3, 'input_scale': 1, 'dropout': 0, 'output_scale': 1},
-        'c': {'weight_scale': 5, 'target_scale': 30, 'input_scale': 1, 'dropout': 0, 'output_scale': 1},
-        'd': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 0.01, 'dropout': 0, 'output_scale': 1},
-        'e': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'dropout': 0.6, 'output_scale': 1},
-        'f': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'dropout': 0, 'output_scale': 0.1},
+        'a': {'weight_scale': 5, 'target_scale' : 3, 'input_scale': 1, 'output_scale':1 },
+        'b': {'weight_scale': 1, 'target_scale': 3, 'input_scale': 1, 'output_scale': 1},
+        'c': {'weight_scale': 5, 'target_scale': 30, 'input_scale': 1, 'output_scale': 1},
+        'd': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 0.01, 'output_scale': 1},
+        'e': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'output_scale': 1},
+        'f': {'weight_scale': 5, 'target_scale': 3, 'input_scale': 1, 'output_scale': 0.1},
     }
     run(args, **(subfig_d[args.subfig]))
